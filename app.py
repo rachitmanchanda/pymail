@@ -11,7 +11,7 @@ from slacker import Slacker
 
 app = Flask(__name__)
 
-@app.route('/webhook')
+@app.route('/webhook',methods=[GET,POSTS])
 def webhook():
     #req=requests.get_json(silent=True, force=True)
 
