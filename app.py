@@ -1,15 +1,17 @@
 #!/usr/bin/env python
 from flask import Flask
 import requests 
-from flask_mail import Mail, Message
-from conf import Config
 from flask import make_response
 import json
 import os 
+from slacker import Slacker
+
+
+
 
 app = Flask(__name__)
 
-@app.route('/webhook',methods=['POST'])
+@app.route('/webhook')
 def webhook():
     #req=requests.get_json(silent=True, force=True)
 
@@ -21,34 +23,17 @@ def webhook():
     # res = json.dumps(res, indent=4)
     # r= make_response(res)
     # return r
-    res = mailSend()
-    res = json.dumps(res, indent=4)
-    r = make_response(res)
-    r.headers['Content-Type'] = 'application/json'
-    return r
+    mailSend()
 
+    
 def mailSend():
-    mail_settings = {
-    "MAIL_SERVER": 'smtp.gmail.com',
-    "MAIL_PORT": 465,
-    "MAIL_USE_TLS": False,
-    "MAIL_USE_SSL": True,
-    "MAIL_USERNAME": Config.EMAIL_USER,
-    "MAIL_PASSWORD": Config.EMAIL_PASSWORD,
-    }
+    slack=Slacker('xoxp-450789184706-450695730467-585994880290-066e57ee2ee75f5a73ba63f90641059c')
+    slack.chat.post_message(channel='technical',
+                        text='Your system is being invaded',
+                        username='rachitmanchandas',
+                        icon_url='http://devarea.com/wp-content/uploads/2017/11/python-300x300.png')
 
-    app.config.update(mail_settings)
-    mail = Mail(app)
-
-    with app.app_context():
-        msg = Message(subject="Hello",
-            sender=app.config.get("MAIL_USERNAME"),
-            recipients=["rachitmanchanda@yahoo.com"], 
-            body="Hi")
-        mail.send(msg)
-    return {
-        "Success": "true"
-    }
+        
 
 
 if __name__ == '__main__':
