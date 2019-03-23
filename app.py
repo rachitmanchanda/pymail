@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from flask import Flask
 import requests 
 from flask_mail import Mail, Message
@@ -39,9 +40,6 @@ def mailSend():
             recipients=["rachitmanchanda@yahoo.com"], 
             body="Hi")
         mail.send(msg)
-
-
-app.run(debug=True)
 
 
 if __name__ == '__main__':
